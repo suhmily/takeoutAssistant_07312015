@@ -30,14 +30,6 @@ import edu.cmu.mobile.team3.takeoutassistant.TwoStepOAuth;
 public class YelpAPI {
 
     private static final String API_HOST = "api.yelp.com";
-    private static final String DEFAULT_TERM = "dinner";
-    private static final String DEFAULT_LOCATION = "San Francisco, CA";
-
-    private static final String DEFAULT_RESTAURANT = "little asia";
-    private static final String DEFAULT_PHONENUMBER = "+14126220133";
-    private static final int SEARCH_LIMIT = 3;
-    private static final String SEARCH_PATH = "/v2/search";
-    private static final String BUSINESS_PATH = "/v2/business";
 
     /*
      * Update OAuth credentials below from the Yelp Developers API site:
@@ -57,12 +49,12 @@ public class YelpAPI {
                 new ServiceBuilder().provider(TwoStepOAuth.class).apiKey(CONSUMER_KEY)
                         .apiSecret(CONSUMER_SECRET).build();
         this.accessToken = new Token(TOKEN, TOKEN_SECRET);
-        Log.v("MyYelpAPI:", "Created");
+        //Log.v("MyYelpAPI:", "Created");
     }
 
     public String searchForRestaurantByPhoneNumber(String phoneNumber) {
-        OAuthRequest request = createOAuthRequest("/v2/phone_search?phone=+14126220133");
-        Log.v("MyYelpAPI:", "searchForRestaurantByPhoneNumber");
+        OAuthRequest request = createOAuthRequest("/v2/phone_search?phone=+1" + phoneNumber);
+        //Log.v("MyYelpAPI:", "searchForRestaurantByPhoneNumber");
         return sendRequestAndGetResponse(request);
     }
     /**
@@ -73,7 +65,7 @@ public class YelpAPI {
      */
     private OAuthRequest createOAuthRequest(String path) {
         OAuthRequest request = new OAuthRequest(Verb.GET, "http://" + API_HOST + path);
-        Log.v("MyYelpAPI:", "createOAuthRequest");
+        //Log.v("MyYelpAPI:", "createOAuthRequest");
         return request;
     }
 
@@ -84,20 +76,20 @@ public class YelpAPI {
      * @return <tt>String</tt> body of API response
      */
     private String sendRequestAndGetResponse(OAuthRequest request) {
-        Log.v("MyYelpAPI:", "sendRequestAndGetResponse " + request.getCompleteUrl());
+        //Log.v("MyYelpAPI:", "sendRequestAndGetResponse " + request.getCompleteUrl());
         this.service.signRequest(this.accessToken, request);
-        Log.v("MyYelpAPI:", "Service");
+       // Log.v("MyYelpAPI:", "Service");
         //Log.v("MyYelpAPI:", request.g);
         Response response = request.send();
         //Log.v("MyYelpAPI:", );
-        Log.v("MyYelpAPI:", "response");
+        //Log.v("MyYelpAPI:", "response");
         return response.getBody();
     }
 
 
     public static PaperMenu queryAPI(YelpAPI yelpApi,String PhoneNum) {
         // Select the first business and display business details
-        String response = yelpApi.searchForRestaurantByPhoneNumber("4126220133").replaceAll("[\\[ \\] \\{ \\} \"]", "");
+        String response = yelpApi.searchForRestaurantByPhoneNumber(PhoneNum).replaceAll("[\\[ \\] \\{ \\} \"]", "");
         //System.out.println(response.replaceAll("[\\[ \\] \\{ \\}]", ""));
         Log.v("MyYelpAPI:", response );
         String[]str = response.split(",");

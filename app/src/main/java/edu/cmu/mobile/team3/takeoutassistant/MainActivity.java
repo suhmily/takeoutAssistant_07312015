@@ -293,7 +293,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                     requestCode == SELECT_PHOTO_ACTIVITY_REQUEST_CODE) {
                 OCR ocr = new OCR(path);
                 PaperMenu pm = ocr.getRestaurant();
-                if (pm != null) {
+                if (pm != null && pm.getPhoneNumber() != null && !menuList.contains(pm)) {
                     menuList.add(pm);
                     Database.write(menuList);
                     updateView();

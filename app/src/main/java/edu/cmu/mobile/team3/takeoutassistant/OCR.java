@@ -35,7 +35,7 @@ public class OCR {
     public OCR(String path) {
         lines = Arrays.asList(path.split("\\n+"));
         _path = path;
-         menu = new PaperMenu();
+         //menu = new PaperMenu();
          //phoneNum = getPhoneNum();
         phoneNum = "+14126220133";
         if(phoneNum.equals("")) {
@@ -45,7 +45,7 @@ public class OCR {
         //Log.v("OCR:", "phone Num " + phoneNum);
 
         YelpAPI yelpApi = new YelpAPI();
-        YelpAPI.queryAPI(yelpApi, "4126220133");
+        YelpAPI.queryAPI(yelpApi, "4126");
 
         menu  = YelpAPI.queryAPI(yelpApi, phoneNum);
         //Log.v("OCR:", menu.getRestaurantName());
