@@ -34,18 +34,19 @@ public class OCR {
 
     public OCR(String path) {
         lines = Arrays.asList(path.split("\\n+"));
-        _path = path;
+        _path = path.replaceAll("[^0-9]+", "");
          //menu = new PaperMenu();
          //phoneNum = getPhoneNum();
-        phoneNum = "+14126220133";
-        if(phoneNum.equals("")) {
+        //phoneNum = "4126220133";
+        phoneNum = getPhoneNum();
+        if(phoneNum.equals("") || phoneNum.length() != 10) {
             Log.v("OCR:", "phone Num not get");
             return;
         }
         //Log.v("OCR:", "phone Num " + phoneNum);
 
         YelpAPI yelpApi = new YelpAPI();
-        YelpAPI.queryAPI(yelpApi, "4126");
+        //YelpAPI.queryAPI(yelpApi, "4126220133");
 
         menu  = YelpAPI.queryAPI(yelpApi, phoneNum);
         //Log.v("OCR:", menu.getRestaurantName());
@@ -59,14 +60,17 @@ public class OCR {
     public String getPhoneNum() {
         if(_path.length() == 0)
             return "";
-        Pattern p1 = Pattern.compile("[0-9]{3}[-][0-9]{3}[-][0-9]{2}[-][0-9]{2} ");
 
-        Matcher m1 = p1.matcher(_path);
+        //Pattern p1 = Pattern.compile("[0-9]{3}[-][0-9]{3}[-][0-9]{2}[-][0-9]{2} ");
+           Pattern p2 = Pattern.compile("[0-9]+");
+        //Matcher m1 = p1.matcher(_path);
+        Matcher m2 = p2.matcher(_path);
 
-        if(m1.find()) {
-            return m1.group(0);
+        Log.v("OCR:", _path);
+
+        if(m2.find()) {
+            return m2.group(0);
         }
-
         return "";
     }
 

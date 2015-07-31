@@ -289,16 +289,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 }
             }
 
-            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
-                    requestCode == SELECT_PHOTO_ACTIVITY_REQUEST_CODE) {
-                OCR ocr = new OCR(path);
-                PaperMenu pm = ocr.getRestaurant();
-                if (pm != null && pm.getPhoneNumber() != null && !menuList.contains(pm)) {
-                    menuList.add(pm);
-                    Database.write(menuList);
-                    updateView();
-                }
-            }
+
         }
 
 
@@ -376,6 +367,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         }
 
         recognizedText = recognizedText.trim();
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
+                requestCode == SELECT_PHOTO_ACTIVITY_REQUEST_CODE) {
+            OCR ocr = new OCR(recognizedText);
+            PaperMenu pm = ocr.getRestaurant();
+            if (pm != null && pm.getPhoneNumber() != null && !menuList.contains(pm)) {
+                menuList.add(pm);
+                Database.write(menuList);
+                updateView();
+            }
+        }
 
 
 
