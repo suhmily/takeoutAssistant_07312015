@@ -62,14 +62,14 @@ public class OCR {
             return "";
 
         //Pattern p1 = Pattern.compile("[0-9]{3}[-][0-9]{3}[-][0-9]{2}[-][0-9]{2} ");
-           Pattern p2 = Pattern.compile("[0-9]+");
+           Pattern p = Pattern.compile("[0-9]+");
         //Matcher m1 = p1.matcher(_path);
-        Matcher m2 = p2.matcher(_path);
+        Matcher m = p.matcher(_path);
 
         Log.v("OCR:", _path);
 
-        if(m2.find()) {
-            return m2.group(0);
+        if(m.find()) {
+            return m.group(0);
         }
         return "";
     }

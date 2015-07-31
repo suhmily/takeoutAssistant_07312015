@@ -3,6 +3,10 @@ package edu.cmu.mobile.team3.takeoutassistant;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -339,6 +343,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             // Convert to ARGB_8888, required by tess
             bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 
+            Bitmap grayScale = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(grayScale);
+            Paint paint = new Paint();
+            ColorMatrix cm = new ColorMatrix();
+            cm.setSaturation(0);
+            ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+            paint.setColorFilter(f);
+            c.drawBitmap(bitmap, 0, 0, paint);
+            bitmap = grayScale;
+
         } catch (IOException e) {
             Log.e(TAG, "Couldn't correct orientation: " + e.toString());
         }
@@ -349,6 +363,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
         TessBaseAPI baseApi = new TessBaseAPI();
         baseApi.setDebug(true);
+
         baseApi.init(DATA_PATH, lang);
         baseApi.setImage(bitmap);
 
