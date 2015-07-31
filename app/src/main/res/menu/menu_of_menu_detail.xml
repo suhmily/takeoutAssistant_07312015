@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="edu.cmu.mobile.team3.takeoutassistant.MenuActivity">
+
+
+    <item
+        android:id="@+id/menu_back"
+        android:title="@string/menu_item_1"
+        android:orderInCategory="103"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/share_twit"
+        android:title="@string/menu_item_2"
+        android:orderInCategory="104"
+        app:showAsAction="always" />
+</menu>

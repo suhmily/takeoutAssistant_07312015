@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Takeout Assistant</string>
+
+    <string name="image_item_1">Take a new photo</string>
+    <string name="image_item_2">Choose existing</string>
+    <string name="title_activity_menu">Menu</string>
+
+    <string name="menu_item_1">Back</string>
+    <string name="menu_item_2">Share</string>
+</resources>
