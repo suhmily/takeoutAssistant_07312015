@@ -2,12 +2,20 @@ package edu.cmu.mobile.team3.takeoutassistant;
 
 import android.util.Log;
 
+import java.util.Map;
+import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
+
+import edu.cmu.mobile.team3.takeoutassistant.PaperMenu;
+import edu.cmu.mobile.team3.takeoutassistant.TwoStepOAuth;
 
 
 /**
@@ -72,7 +80,7 @@ public class YelpAPI {
     private String sendRequestAndGetResponse(OAuthRequest request) {
         //Log.v("MyYelpAPI:", "sendRequestAndGetResponse " + request.getCompleteUrl());
         this.service.signRequest(this.accessToken, request);
-       // Log.v("MyYelpAPI:", "Service");
+        // Log.v("MyYelpAPI:", "Service");
         //Log.v("MyYelpAPI:", request.g);
         Response response = request.send();
         //Log.v("MyYelpAPI:", );
@@ -81,30 +89,44 @@ public class YelpAPI {
     }
 
 
-    public static Restaurant queryAPI(YelpAPI yelpApi, String PhoneNum) {
+    public static PaperMenu queryAPI(YelpAPI yelpApi,String PhoneNum) {
         // Select the first business and display business details
         String response = yelpApi.searchForRestaurantByPhoneNumber(PhoneNum).replaceAll("[\\[ \\] \\{ \\} \"]", "");
         //System.out.println(response.replaceAll("[\\[ \\] \\{ \\}]", ""));
         Log.v("MyYelpAPI:", response );
-        String[]str = response.split(",");
-        Restaurant menu = new Restaurant();
-        for(int i = 0; i < str.length; i++) {
-            String[] tmp = str[i].split(":");
-            if(tmp[0].equals("name"))
-                menu.setName(tmp[1] + "\n");
-            else if(tmp[0].equals("phone"))
-                menu.setPhone(tmp[1] + "\n");
-            else if(tmp[0].equals("display_address")) {
-                String s = "";
-                s += tmp[1] + "\n";//311SCraigSt
-                i++;
-                s += str[i++] + "\n";//Pittsburgh
-                s += str[i++] + "\n";//Oakland
-                //System.out.println(str[i++]);//display_address:311SCraigSt
-                menu.setAddress(s);
-                break;
+        PaperMenu menu = new PaperMenu();
+        try{
+            JSONObject mainJson = new JSONObject(response);
+            JSONArray businesses = mainJson.getJSONArray("businesses");
+
+            JSONObject business = businesses.getJSONObject(0);
+            menu.setRestaurantName(business.getString("name"));
+            //System.out.println("rating: " + business.getString("rating"));
+            //System.out.println("mobile_url: " + business.getString("mobile_url"));
+            menu.setPhoneNumber(business.getString("phone"));
+            JSONArray address = business.getJSONObject("location").getJSONArray("display_address");
+            String address_string = "";
+            for (int j=0; j < address.length(); j++)
+                address_string = address_string + address.getString(j) + " ";
+            menu.setAddress(address_string);
+
+            JSONArray category = business.getJSONArray("categories");
+            String category_string = "";
+            for (int j = 0; j < category.length(); j = j + 1) {
+                JSONArray subCat = category.getJSONArray(j);
+                category_string = category_string + subCat.getString(1) + ", ";
             }
+
+            menu.setCategory(category_string);
+
+            
+            menu.setReview(business.getString("review_count"));
+            menu.setImage(business.getString("snippet_image_url"));
+            menu.setUrl(business.getString("mobile_url"));
+             menu.setRating(business.getString("rating_img_url"));
+
         }
+        catch(Exception e){System.out.println(e);}
         return menu;
     }
 
