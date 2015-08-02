@@ -1,10 +1,14 @@
 package edu.cmu.mobile.team3.takeoutassistant;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -15,7 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
@@ -37,9 +47,14 @@ public class MenuActivity extends ActionBarActivity {
 
         Bundle bundle = getIntent().getExtras();
         Restaurant pm = (Restaurant) bundle.get("menu");
-        ((TextView) findViewById(R.id.addressTextView)).setText(pm.getAddress());
+
+        // set restaurant name
         this.setTitle(pm.getName());
 
+        // set address
+        ((TextView) findViewById(R.id.addressTextView)).setText(pm.getAddress());
+
+        // set phone number
         Button callButton = (Button) findViewById(R.id.callButton);
         callButton.setText(pm.getPhone());
         callButton.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +62,46 @@ public class MenuActivity extends ActionBarActivity {
             public void onClick(View view) {
                 startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
                         + ((Button) view).getText())));
+            }
+        });
+
+        // set head image
+
+        try {
+            InputStream inputStream = getImageViewInputStream(pm.getImage());
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            ((ImageView) findViewById(R.id.headPhoto)).setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // set review
+        ((TextView) findViewById(R.id.reviewTextView)).setText("Review: " + pm.getReview());
+
+        // set category
+        ((TextView) findViewById(R.id.catagoryTextView)).setText("Category: " + pm.getCategory());
+
+        // set snippet summary
+        ((TextView) findViewById(R.id.snippetTextView)).setText("Summary: " + pm.getSnippet());
+
+        // set rating
+        try {
+            InputStream inputStream = getImageViewInputStream(pm.getRating());
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            ((ImageView) findViewById(R.id.rating)).setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // set url
+        Button openBtn = (Button) findViewById(R.id.openYelpURL);
+        openBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "http://www.google.com";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
             }
         });
     }
@@ -120,5 +175,27 @@ public class MenuActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 从网络中获取图片，以流的形式返回
+     *
+     * @return
+     */
+    public static InputStream getImageViewInputStream(String path) throws IOException {
+        InputStream inputStream = null;
+        URL url = new URL(path);                    //服务器地址
+        if (url != null) {
+            //打开连接
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(3000);//设置网络连接超时的时间为3秒
+            httpURLConnection.setRequestMethod("GET");        //设置请求方法为GET
+            httpURLConnection.setDoInput(true);                //打开输入流
+            int responseCode = httpURLConnection.getResponseCode();    // 获取服务器响应值
+            if (responseCode == HttpURLConnection.HTTP_OK) {        //正常连接
+                inputStream = httpURLConnection.getInputStream();        //获取输入流
+            }
+        }
+        return inputStream;
     }
 }
