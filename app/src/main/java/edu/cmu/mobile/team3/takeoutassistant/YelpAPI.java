@@ -14,9 +14,6 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-import edu.cmu.mobile.team3.takeoutassistant.PaperMenu;
-import edu.cmu.mobile.team3.takeoutassistant.TwoStepOAuth;
-
 
 /**
  * Code sample for accessing the Yelp API V2.
@@ -89,21 +86,21 @@ public class YelpAPI {
     }
 
 
-    public static PaperMenu queryAPI(YelpAPI yelpApi,String PhoneNum) {
+    public static Restaurant queryAPI(YelpAPI yelpApi, String PhoneNum) {
         // Select the first business and display business details
         String response = yelpApi.searchForRestaurantByPhoneNumber(PhoneNum).replaceAll("[\\[ \\] \\{ \\} \"]", "");
         //System.out.println(response.replaceAll("[\\[ \\] \\{ \\}]", ""));
         Log.v("MyYelpAPI:", response );
-        PaperMenu menu = new PaperMenu();
+        Restaurant menu = new Restaurant();
         try{
             JSONObject mainJson = new JSONObject(response);
             JSONArray businesses = mainJson.getJSONArray("businesses");
 
             JSONObject business = businesses.getJSONObject(0);
-            menu.setRestaurantName(business.getString("name"));
+            menu.setName(business.getString("name"));
             //System.out.println("rating: " + business.getString("rating"));
             //System.out.println("mobile_url: " + business.getString("mobile_url"));
-            menu.setPhoneNumber(business.getString("phone"));
+            menu.setPhone(business.getString("phone"));
             JSONArray address = business.getJSONObject("location").getJSONArray("display_address");
             String address_string = "";
             for (int j=0; j < address.length(); j++)
@@ -123,7 +120,7 @@ public class YelpAPI {
             menu.setReview(business.getString("review_count"));
             menu.setImage(business.getString("snippet_image_url"));
             menu.setUrl(business.getString("mobile_url"));
-             menu.setRating(business.getString("rating_img_url"));
+            menu.setRating(business.getString("rating_img_url"));
 
         }
         catch(Exception e){System.out.println(e);}

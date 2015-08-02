@@ -69,44 +69,51 @@
                 android:id="@+id/snippetTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Summary: XXX" />
+                android:text="Summary: XXX"
+                android:layout_margin="5dp" />
 
             <TextView
                 android:id="@+id/catagoryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Category: Chinese food" />
+                android:text="Category: Chinese food"
+                android:layout_margin="5dp" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rating:" />
+                    android:text="Rating:"
+                    android:layout_margin="5dp" />
 
                 <ImageView
                     android:id="@+id/rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:layout_margin="5dp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/reviewTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reviews: XXXXX" />
+                android:text="Reviews: XXXXX"
+                android:layout_margin="5dp" />
 
 
             <Button
                 android:id="@+id/openYelpURL"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="More in Yelp" />
+                android:text="More in Yelp"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
     </RelativeLayout>
