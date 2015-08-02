@@ -8,17 +8,13 @@ import android.net.Uri;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.InputType;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import twitter4j.StatusUpdate;
@@ -40,12 +36,12 @@ public class MenuActivity extends ActionBarActivity {
         }
 
         Bundle bundle = getIntent().getExtras();
-        PaperMenu pm = (PaperMenu) bundle.get("menu");
+        Restaurant pm = (Restaurant) bundle.get("menu");
         ((TextView) findViewById(R.id.addressTextView)).setText(pm.getAddress());
-        this.setTitle(pm.getRestaurantName());
+        this.setTitle(pm.getName());
 
         Button callButton = (Button) findViewById(R.id.callButton);
-        callButton.setText(pm.getPhoneNumber());
+        callButton.setText(pm.getPhone());
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,32 +49,6 @@ public class MenuActivity extends ActionBarActivity {
                         + ((Button) view).getText())));
             }
         });
-
-        TableLayout table = (TableLayout) findViewById(R.id.menuTable);
-        table.setStretchAllColumns(true);
-        for (String name : pm.getMenuList().keySet()) {
-            TableRow row = new TableRow(this);
-
-            TextView nameView = new TextView(this);
-            TextView priceView = new TextView(this);
-
-            DisplayMetrics metric = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metric);
-            int width = (int) (metric.widthPixels * 0.7);
-
-            nameView.setText(name);
-            nameView.setMaxWidth(width);
-            nameView.setMinWidth(width);
-
-            priceView.setText(pm.getMenuList().get(name));
-
-            row.addView(nameView);
-            row.addView(priceView);
-
-            table.addView(row, new TableLayout.LayoutParams(
-                    TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        }
-
     }
 
     private float getRawSize(int unit, float value) {

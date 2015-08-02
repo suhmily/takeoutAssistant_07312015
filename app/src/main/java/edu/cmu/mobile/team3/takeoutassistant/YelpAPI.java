@@ -2,18 +2,12 @@ package edu.cmu.mobile.team3.takeoutassistant;
 
 import android.util.Log;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
-
-import edu.cmu.mobile.team3.takeoutassistant.PaperMenu;
-import edu.cmu.mobile.team3.takeoutassistant.TwoStepOAuth;
 
 
 /**
@@ -87,19 +81,19 @@ public class YelpAPI {
     }
 
 
-    public static PaperMenu queryAPI(YelpAPI yelpApi,String PhoneNum) {
+    public static Restaurant queryAPI(YelpAPI yelpApi, String PhoneNum) {
         // Select the first business and display business details
         String response = yelpApi.searchForRestaurantByPhoneNumber(PhoneNum).replaceAll("[\\[ \\] \\{ \\} \"]", "");
         //System.out.println(response.replaceAll("[\\[ \\] \\{ \\}]", ""));
         Log.v("MyYelpAPI:", response );
         String[]str = response.split(",");
-        PaperMenu menu = new PaperMenu();
+        Restaurant menu = new Restaurant();
         for(int i = 0; i < str.length; i++) {
             String[] tmp = str[i].split(":");
             if(tmp[0].equals("name"))
-                menu.setRestaurantName(tmp[1] + "\n");
+                menu.setName(tmp[1] + "\n");
             else if(tmp[0].equals("phone"))
-                menu.setPhoneNumber(tmp[1] + "\n");
+                menu.setPhone(tmp[1] + "\n");
             else if(tmp[0].equals("display_address")) {
                 String s = "";
                 s += tmp[1] + "\n";//311SCraigSt

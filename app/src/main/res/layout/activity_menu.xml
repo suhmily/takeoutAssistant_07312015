@@ -31,7 +31,7 @@
                 <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:scaleType="centerInside" />
+                    android:scaleType="fitCenter" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -43,12 +43,13 @@
                         android:id="@+id/addressTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Address" />
+                        android:text="Address: 222 Melwood Ave. Pittsburgh, PA 15213" />
 
                     <Button
                         android:id="@+id/callButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="4121234567" />
 
 
                 </LinearLayout>
@@ -56,19 +57,25 @@
 
             </LinearLayout>
 
+            <!--   <fragment
+                   android:layout_width="match_parent"
+                   android:layout_height="200dp"
+                   android:id="@+id/map"
+                   android:name="com.google.android.gms.maps.SupportMapFragment" />
+           -->
+
             <TextView
+                android:id="@+id/catagoryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:text="Menu"
-                android:textStyle="bold" />
+                android:text="Category: Chinese food" />
 
-            <TableLayout
-                android:id="@+id/menuTable"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/snippetTextView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="7dp"
-                android:stretchColumns="*" />
+                android:text="Summary" />
+
 
         </LinearLayout>
     </RelativeLayout>

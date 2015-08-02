@@ -44,7 +44,7 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 
 
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
-    private List<PaperMenu> menuList = null;
+    private List<Restaurant> menuList = null;
     //private ListView listView = null;
     private SimpleAdapter simpleAdapter = null;
     private List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -163,40 +163,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 from, to);
     }
 
-//    private void create_list(){
-//        menuList = new ArrayList<PaperMenu>();
-//
-//        PaperMenu pm = new PaperMenu();
-//        pm.setRestaurantName("Little Asia");
-//        pm.setPhoneNumber("4121111111");
-//        pm.setAddress("417 Cragi St, Pittsburgh, PA 15213");
-//        pm.addToMenu("Chicken", "5");
-//        pm.addToMenu("Beef", "6");
-//        pm.addToMenu("McWrap Chicken and Bacon", "3.5");
-//        pm.addToMenu("Pepsi", "1.6");
-//        pm.addToMenu("Chicken roll", "5.5");
-//        pm.addToMenu("Fried rice", "6.5");
-//        pm.addToMenu("Gyro", "5");
-//        pm.addToMenu("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "5");
-//        menuList.add(pm);
-//
-//
-//
-//        menuList = null;
-//
-//    }
-
     private void initList() {
         menuList = Database.read();
 
         list = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < menuList.size(); ++i) {
             HashMap<String, Object> map = new HashMap<String, Object>();
-            PaperMenu menu = menuList.get(i);
-            map.put("name", menu.getRestaurantName());
+            Restaurant menu = menuList.get(i);
+            map.put("name", menu.getName());
             map.put("address", menu.getAddress());
-            map.put("phone", menu.getPhoneNumber());
-            map.put("list", menu.getMenuList());
+            map.put("phone", menu.getPhone());
             list.add(map);
         }
 
@@ -385,12 +361,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
                 requestCode == SELECT_PHOTO_ACTIVITY_REQUEST_CODE) {
             OCR ocr = new OCR(recognizedText);
-            PaperMenu pm = ocr.getRestaurant();
-            if (pm != null && pm.getPhoneNumber() != null && !menuList.contains(pm)) {
+            //PaperMenu pm = ocr.getRestaurant();
+            Restaurant pm = new Restaurant();
+            pm.setName("Little Asia");
+            pm.setPhone("4121111111");
+            pm.setAddress("417 Cragi St, Pittsburgh, PA 15213");
+            //     if (pm != null && pm.getPhoneNumber() != null && !menuList.contains(pm)) {
                 menuList.add(pm);
                 Database.write(menuList);
                 updateView();
-            }
+            //     }
         }
 
 

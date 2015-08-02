@@ -2,11 +2,8 @@ package edu.cmu.mobile.team3.takeoutassistant;
 
 import android.util.Log;
 
-import com.beust.jcommander.JCommander;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,12 +19,12 @@ public class OCR {
     private HashMap<String, String> menu_list;
     */
     private List<String> lines;
-    private PaperMenu menu;
+    private Restaurant menu;
     private String _path;
     private String phoneNum;
     public OCR() {
         lines = new ArrayList<String>();
-        menu = new PaperMenu();
+        menu = new Restaurant();
         phoneNum = "";
         _path = "";
     }
@@ -53,7 +50,7 @@ public class OCR {
 
     }
 
-    public PaperMenu getRestaurant() {
+    public Restaurant getRestaurant() {
         return menu;
     }
 

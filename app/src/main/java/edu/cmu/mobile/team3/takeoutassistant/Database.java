@@ -19,7 +19,7 @@ public class Database {
     private static final String DATABASE = Environment
             .getExternalStorageDirectory().toString() + "/TakeoutAssistant-master/database.txt";
 
-    public static void write(List<PaperMenu> list) {
+    public static void write(List<Restaurant> list) {
         if (list == null || list.size() == 0) return;
 
         FileWriter out = null;
@@ -34,22 +34,20 @@ public class Database {
         }
     }
 
-    public static List<PaperMenu> read() {
-        List<PaperMenu> list = null;
+    public static List<Restaurant> read() {
+        List<Restaurant> list = new ArrayList<Restaurant>();
         FileInputStream in = null;
         try {
             in = new FileInputStream(DATABASE);
             if (in != null) {
                 JsonReader jr = new JsonReader(in);
-                list = (List<PaperMenu>) jr.readObject();
+                list = (List<Restaurant>) jr.readObject();
                 try {
                     in.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else
-                list = new ArrayList<PaperMenu>();
-
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
