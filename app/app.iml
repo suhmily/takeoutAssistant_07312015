@@ -137,7 +137,7 @@
     <orderEntry type="library" exported="" name="play-services-maps-7.5.0" level="project" />
     <orderEntry type="module" module-name="json_simple-1.1" exported="" />
     <orderEntry type="module" module-name="tesstwo1" exported="" />
-    <orderEntry type="module" module-name="scribe-1.3.5" exported="" />
     <orderEntry type="module" module-name="jcommander-1.35" exported="" />
+    <orderEntry type="module" module-name="scribe-1.3.5" exported="" />
   </component>
 </module>
