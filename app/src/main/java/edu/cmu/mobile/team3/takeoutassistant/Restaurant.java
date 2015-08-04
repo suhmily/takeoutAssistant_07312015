@@ -18,7 +18,7 @@ public class Restaurant implements Parcelable {
     private String url;
 
     public String getReview() {
-        return review;
+        return review == null ? "Nice food!" : review;
     }
 
     public void setReview(String review) {
@@ -97,8 +97,16 @@ public class Restaurant implements Parcelable {
 
     @Override
     public String toString() {
-        return "PaperMenu{" +
-                "Restaurant='" + name + '\'' +
+        return "Restaurant{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", category='" + category + '\'' +
+                ", review='" + review + '\'' +
+                ", rating='" + rating + '\'' +
+                ", image='" + image + '\'' +
+                ", url='" + url + '\'' +
+                ", snippet='" + snippet + '\'' +
                 '}';
     }
 

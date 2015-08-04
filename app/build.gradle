@@ -20,11 +20,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':tesstwo1')
     compile project(':jcommander-1.35')
-    compile project(':json_simple-1.1')
     compile project(':scribe-1.3.5')
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.google.android.gms:play-services:7.5.0'
+    compile project(':json')
 }

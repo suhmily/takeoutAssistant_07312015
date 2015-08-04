@@ -33,8 +33,6 @@ public class OCR {
         lines = Arrays.asList(path.split("\\n+"));
         _path = path.replaceAll("[^0-9]+", "");
          //menu = new PaperMenu();
-         //phoneNum = getPhoneNum();
-        //phoneNum = "4126220133";
         phoneNum = getPhoneNum();
         if(phoneNum.equals("") || phoneNum.length() != 10) {
             Log.v("OCR:", "phone Num not get");

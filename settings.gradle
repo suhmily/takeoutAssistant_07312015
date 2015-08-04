@@ -1,2 +1,2 @@
-include ':app', ':json_simple-1.1', ':jcommander-1.35', ':scribe-1.3.5'
+include ':app', ':json_simple-1.1', ':jcommander-1.35', ':scribe-1.3.5', ':json', ':commons-codec-1.4'
 include ':tesstwo1'

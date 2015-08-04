@@ -269,112 +269,107 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 }
             }
 
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
 
-        }
+            Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
+            try {
+                ExifInterface exif = new ExifInterface(path);
+                int exifOrientation = exif.getAttributeInt(
+                        ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_NORMAL);
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+                Log.v(TAG, "Orient: " + exifOrientation);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                int rotate = 0;
 
-        try {
-            ExifInterface exif = new ExifInterface(path);
-            int exifOrientation = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
+                switch (exifOrientation) {
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        rotate = 90;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        rotate = 180;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        rotate = 270;
+                        break;
+                }
 
-            Log.v(TAG, "Orient: " + exifOrientation);
+                Log.v(TAG, "Rotation: " + rotate);
 
-            int rotate = 0;
+                if (rotate != 0) {
 
-            switch (exifOrientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotate = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotate = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotate = 270;
-                    break;
+                    // Getting width & height of the given image.
+                    int w = bitmap.getWidth();
+                    int h = bitmap.getHeight();
+
+                    // Setting pre rotate
+                    Matrix mtx = new Matrix();
+                    mtx.preRotate(rotate);
+
+                    // Rotating Bitmap
+                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+                }
+
+                // Convert to ARGB_8888, required by tess
+                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+                Bitmap grayScale = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas(grayScale);
+                Paint paint = new Paint();
+                ColorMatrix cm = new ColorMatrix();
+                cm.setSaturation(0);
+                ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+                paint.setColorFilter(f);
+                c.drawBitmap(bitmap, 0, 0, paint);
+                bitmap = grayScale;
+
+            } catch (IOException e) {
+                Log.e(TAG, "Couldn't correct orientation: " + e.toString());
             }
 
-            Log.v(TAG, "Rotation: " + rotate);
+            // _image.setImageBitmap( bitmap );
 
-            if (rotate != 0) {
+            Log.v(TAG, "Before baseApi");
 
-                // Getting width & height of the given image.
-                int w = bitmap.getWidth();
-                int h = bitmap.getHeight();
+            TessBaseAPI baseApi = new TessBaseAPI();
+            baseApi.setDebug(true);
 
-                // Setting pre rotate
-                Matrix mtx = new Matrix();
-                mtx.preRotate(rotate);
+            baseApi.init(DATA_PATH, lang);
+            baseApi.setImage(bitmap);
 
-                // Rotating Bitmap
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+            String recognizedText = baseApi.getUTF8Text();
+
+            baseApi.end();
+
+            // You now have the text in recognizedText var, you can do anything with it.
+            // We will display a stripped out trimmed alpha-numeric version of it (if lang is eng)
+            // so that garbage doesn't make it to the display.
+
+            Log.v(TAG, "OCRED TEXT: " + recognizedText);
+
+            if (lang.equalsIgnoreCase("eng")) {
+                recognizedText = recognizedText.replaceAll("[^a-zA-Z0-9]+", " ");
             }
 
-            // Convert to ARGB_8888, required by tess
-            bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+            recognizedText = recognizedText.trim();
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
+                    requestCode == SELECT_PHOTO_ACTIVITY_REQUEST_CODE) {
+                OCR ocr = new OCR(recognizedText);
+                Restaurant pm = ocr.getRestaurant();
 
-            Bitmap grayScale = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas(grayScale);
-            Paint paint = new Paint();
-            ColorMatrix cm = new ColorMatrix();
-            cm.setSaturation(0);
-            ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-            paint.setColorFilter(f);
-            c.drawBitmap(bitmap, 0, 0, paint);
-            bitmap = grayScale;
+                if (pm != null && pm.getPhone() != null && !menuList.contains(pm)) {
+                    menuList.add(pm);
 
-        } catch (IOException e) {
-            Log.e(TAG, "Couldn't correct orientation: " + e.toString());
+                    Log.i("Added", pm.toString());
+
+                    Database.write(menuList);
+                    updateView();
+                }
+            }
+
         }
-
-        // _image.setImageBitmap( bitmap );
-
-        Log.v(TAG, "Before baseApi");
-
-        TessBaseAPI baseApi = new TessBaseAPI();
-        baseApi.setDebug(true);
-
-        baseApi.init(DATA_PATH, lang);
-        baseApi.setImage(bitmap);
-
-        String recognizedText = baseApi.getUTF8Text();
-
-        baseApi.end();
-
-        // You now have the text in recognizedText var, you can do anything with it.
-        // We will display a stripped out trimmed alpha-numeric version of it (if lang is eng)
-        // so that garbage doesn't make it to the display.
-
-        Log.v(TAG, "OCRED TEXT: " + recognizedText);
-
-        if ( lang.equalsIgnoreCase("eng") ) {
-            recognizedText = recognizedText.replaceAll("[^a-zA-Z0-9]+", " ");
-        }
-
-        recognizedText = recognizedText.trim();
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ||
-                requestCode == SELECT_PHOTO_ACTIVITY_REQUEST_CODE) {
-            OCR ocr = new OCR(recognizedText);
-            //PaperMenu pm = ocr.getRestaurant();
-            Restaurant pm = new Restaurant();
-            pm.setName("Little Asia");
-            pm.setPhone("4121111111");
-            pm.setAddress("417 Cragi St, Pittsburgh, PA 15213");
-            //     if (pm != null && pm.getPhoneNumber() != null && !menuList.contains(pm)) {
-                menuList.add(pm);
-                Database.write(menuList);
-                updateView();
-            //     }
-        }
-
-
-
     }
 
 }

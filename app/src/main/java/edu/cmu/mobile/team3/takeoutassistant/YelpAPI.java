@@ -92,12 +92,48 @@ public class YelpAPI {
         //System.out.println(response.replaceAll("[\\[ \\] \\{ \\}]", ""));
         Log.v("MyYelpAPI:", response );
         Restaurant menu = new Restaurant();
+        response = response.replaceAll("[\\[ \\]]+", "");
+        String[] str = response.split(",");
+        for (int i = 0; i < str.length; i++) {
+            String[] tmp = str[i].split(":");
+            if (tmp[0].equals("name")) {
+                Log.v("MyYelpAPI:", tmp[1]);
+                menu.setName(tmp[1]);
+            } else if (tmp[0].equals("rating"))
+                menu.setRating(tmp[1]);
+            else if (tmp[0].equals("mobile_url"))
+                menu.setUrl("http:" + tmp[2]);
+            else if (tmp[0].equals("image_url"))
+                menu.setImage("http:" + tmp[2]);
+            else if (tmp[0].equals("phone"))
+                menu.setPhone(tmp[1]);
+            else if (tmp[0].equals("categories")) {
+                menu.setCategory(tmp[1]);
+                String category_string = "";
+                for (int j = 1; j < tmp.length; j = j + 1) {
+
+                    category_string = category_string + tmp[j] + ", ";
+                }
+            } else if (tmp[0].equals("display_address")) {
+                String address_string = "";
+                address_string += tmp[1];
+                i++;
+                address_string += " " + str[i++];
+                address_string += " " + str[i];
+                menu.setAddress(address_string);
+            } else if (tmp[0].equals("rating_img_url"))
+                menu.setRating("http:" + tmp[2]);
+            else if (tmp[0].equals("snippet_text"))
+                menu.setSnippet(tmp[1]);
+        }
+        /*
         try{
             JSONObject mainJson = new JSONObject(response);
             JSONArray businesses = mainJson.getJSONArray("businesses");
 
             JSONObject business = businesses.getJSONObject(0);
             menu.setName(business.getString("name"));
+            Log.v("mybusiness", business.getString("name"));
             //System.out.println("rating: " + business.getString("rating"));
             //System.out.println("mobile_url: " + business.getString("mobile_url"));
             menu.setPhone(business.getString("phone"));
@@ -124,6 +160,7 @@ public class YelpAPI {
 
         }
         catch(Exception e){System.out.println(e);}
+        */
         return menu;
     }
 

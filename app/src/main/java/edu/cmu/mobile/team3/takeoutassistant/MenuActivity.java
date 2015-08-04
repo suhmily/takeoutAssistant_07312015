@@ -35,6 +35,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 
 public class MenuActivity extends ActionBarActivity {
+    private Restaurant r = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +47,9 @@ public class MenuActivity extends ActionBarActivity {
         }
 
         Bundle bundle = getIntent().getExtras();
-        Restaurant pm = (Restaurant) bundle.get("menu");
+        final Restaurant pm = (Restaurant) bundle.get("menu");
 
+        r = pm;
         // set restaurant name
         this.setTitle(pm.getName());
 
@@ -98,7 +100,7 @@ public class MenuActivity extends ActionBarActivity {
         openBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://www.google.com";
+                String url = pm.getUrl();
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
@@ -140,6 +142,7 @@ public class MenuActivity extends ActionBarActivity {
             final EditText input = new EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             builder.setView(input);
+            input.setText("I love this restaurant: " + r.getName() + "\nShared by #TakeoutAssistant");
 
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
